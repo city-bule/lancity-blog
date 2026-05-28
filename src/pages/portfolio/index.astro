@@ -1,0 +1,46 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionTitle from "../../components/SectionTitle.astro";
+import PortfolioCard from "../../components/PortfolioCard.astro";
+import { byDateDesc, getEntryUrl, isPublished } from "../../lib/content";
+
+const works = (await getCollection("portfolio")).filter(isPublished).sort(byDateDesc);
+const types = Array.from(new Set(works.map((work) => work.data.type)));
+---
+
+<BaseLayout title="作品集 | 蓝city" description="收藏 AI 绘图、AI 视频、分镜设计和创作实验。">
+  <main class="mx-auto max-w-5xl px-5 py-12 sm:px-6 sm:py-16">
+    <SectionTitle
+      eyebrow="Portfolio"
+      title="作品集"
+      description="收藏 AI 绘图、AI 视频、分镜设计和创作实验。"
+    />
+
+    <div class="mb-8 flex flex-wrap gap-2">
+      {
+        types.map((type) => (
+          <span class="rounded-full border border-sky-100 bg-white px-3 py-1.5 text-sm text-slate-600">
+            {type}
+          </span>
+        ))
+      }
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-3">
+      {
+        works.map((work) => (
+          <PortfolioCard
+            title={work.data.title}
+            description={work.data.description}
+            date={work.data.date}
+            type={work.data.type}
+            cover={work.data.cover}
+            tags={work.data.tags}
+            url={getEntryUrl("portfolio", work.id)}
+          />
+        ))
+      }
+    </div>
+  </main>
+</BaseLayout>

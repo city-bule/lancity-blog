@@ -1,0 +1,182 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import SectionTitle from "../components/SectionTitle.astro";
+import NoteCard from "../components/NoteCard.astro";
+import PortfolioCard from "../components/PortfolioCard.astro";
+import { byDateDesc, getEntryUrl, isPublished } from "../lib/content";
+
+const notes = (await getCollection("notes")).filter(isPublished).sort(byDateDesc);
+const portfolio = (await getCollection("portfolio")).filter(isPublished).sort(byDateDesc);
+const reviews = (await getCollection("reviews")).filter(isPublished).sort(byDateDesc);
+
+const latestNotes = notes.slice(0, 3);
+const featuredWorks = portfolio.slice(0, 3);
+const latestReviews = reviews.slice(0, 2);
+
+const learningAreas = [
+  {
+    title: "AI 创作",
+    description: "记录 AI 绘图、AI 视频、提示词和视觉风格测试。",
+    accent: "bg-sky-500",
+  },
+  {
+    title: "编程学习",
+    description: "从 HTML、CSS 和网站搭建开始，学习如何把想法做成真正可以访问的网站。",
+    accent: "bg-teal-500",
+  },
+  {
+    title: "影像表达",
+    description: "学习分镜、构图、镜头语言和短片叙事，探索 AI 与电影感表达结合的方式。",
+    accent: "bg-violet-500",
+  },
+];
+---
+
+<BaseLayout>
+  <Hero />
+
+  <main>
+    <section class="bg-sky-50 px-5 py-14 sm:px-6">
+      <div class="mx-auto max-w-5xl">
+        <SectionTitle
+          eyebrow="Now Learning"
+          title="我正在学习"
+          description="把工具学习、创作练习和项目复盘放在同一个空间里，持续整理自己的方法。"
+        />
+        <div class="grid gap-4 md:grid-cols-3">
+          {
+            learningAreas.map((area) => (
+              <article class="rounded-lg border border-sky-100 bg-white p-5 shadow-sm">
+                <span class:list={["mb-5 block h-1.5 w-12 rounded-full", area.accent]}></span>
+                <h3 class="text-lg font-semibold text-slate-950">{area.title}</h3>
+                <p class="mt-3 text-sm leading-7 text-slate-600">{area.description}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white px-5 py-14 sm:px-6">
+      <div class="mx-auto max-w-5xl">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <SectionTitle
+            eyebrow="Notes"
+            title="最新学习笔记"
+            description="整理 AI 创作、编程学习、影像表达和网站搭建过程中的记录。"
+          />
+          <a href="/notes/" class="mb-7 text-sm font-semibold text-sky-700 hover:text-sky-900">查看全部笔记 →</a>
+        </div>
+        <div class="grid gap-4 md:grid-cols-3">
+          {
+            latestNotes.map((note) => (
+              <NoteCard
+                title={note.data.title}
+                description={note.data.description}
+                date={note.data.date}
+                category={note.data.category}
+                tags={note.data.tags}
+                url={getEntryUrl("notes", note.id)}
+              />
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-slate-50 px-5 py-14 sm:px-6">
+      <div class="mx-auto max-w-5xl">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <SectionTitle
+            eyebrow="Portfolio"
+            title="精选作品"
+            description="收藏 AI 绘图、AI 视频、分镜设计和创作实验。"
+          />
+          <a href="/portfolio/" class="mb-7 text-sm font-semibold text-sky-700 hover:text-sky-900">浏览作品集 →</a>
+        </div>
+        <div class="grid gap-4 md:grid-cols-3">
+          {
+            featuredWorks.map((work) => (
+              <PortfolioCard
+                title={work.data.title}
+                description={work.data.description}
+                date={work.data.date}
+                type={work.data.type}
+                cover={work.data.cover}
+                tags={work.data.tags}
+                url={getEntryUrl("portfolio", work.id)}
+              />
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white px-5 py-14 sm:px-6">
+      <div class="mx-auto max-w-5xl">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <SectionTitle
+            eyebrow="Reviews"
+            title="项目复盘"
+            description="把每次尝试中的目标、问题和修改过程记录下来。"
+          />
+          <a href="/reviews/" class="mb-7 text-sm font-semibold text-sky-700 hover:text-sky-900">查看复盘 →</a>
+        </div>
+        <div class="grid gap-4 md:grid-cols-2">
+          {
+            latestReviews.map((review) => (
+              <NoteCard
+                title={review.data.title}
+                description={review.data.description}
+                date={review.data.date}
+                category={review.data.category}
+                tags={review.data.tags}
+                url={getEntryUrl("reviews", review.id)}
+              />
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-sky-50 px-5 py-14 sm:px-6">
+      <div class="mx-auto grid max-w-5xl gap-8 md:grid-cols-[1.1fr_0.9fr] md:items-center">
+        <div>
+          <SectionTitle
+            eyebrow="About"
+            title="关于蓝city"
+            description="这里不是一个完成品展示柜，而是一份持续生长的学习记录。"
+          />
+          <p class="max-w-2xl text-base leading-8 text-slate-600">
+            我会把 AI 创作、网页搭建、分镜练习和项目复盘放在这里，保留思考过程，也记录每一次调整后的结果。
+          </p>
+        </div>
+        <div class="rounded-lg border border-sky-100 bg-white p-5 shadow-sm">
+          <p class="text-sm font-semibold text-slate-900">内容方向</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {
+              ["AI绘图", "AI视频", "提示词", "分镜", "HTML", "CSS", "Astro", "项目复盘"].map((tag) => (
+                <span class="rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-700">{tag}</span>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white px-5 py-14 sm:px-6">
+      <div class="mx-auto max-w-5xl">
+        <div class="rounded-lg border border-sky-100 bg-gradient-to-br from-white via-sky-50 to-violet-50 p-6 shadow-sm sm:p-8">
+          <p class="text-sm font-semibold text-sky-700">Contact</p>
+          <h2 class="mt-3 text-2xl font-semibold text-slate-950">欢迎交流 AI 创作、视频制作、编程学习和博客搭建。</h2>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="/contact/" class="rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800">联系我</a>
+            <a href="/admin/" class="rounded-full border border-sky-200 bg-white px-5 py-3 text-sm font-semibold text-sky-800 hover:bg-sky-50">进入后台</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

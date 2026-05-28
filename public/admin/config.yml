@@ -1,0 +1,88 @@
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: true
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+locale: "zh_Hans"
+
+collections:
+  - name: "notes"
+    label: "学习笔记"
+    folder: "src/content/notes"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "摘要", name: "description", widget: "text" }
+      - { label: "发布日期", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - label: "分类"
+        name: "category"
+        widget: "select"
+        options:
+          - "AI 创作笔记"
+          - "编程学习"
+          - "影像表达"
+          - "网站搭建"
+          - "项目复盘"
+      - { label: "标签", name: "tags", widget: "list", required: false }
+      - { label: "封面图", name: "cover", widget: "image", required: false }
+      - { label: "保存为草稿（开启时不会显示在博客前台）", name: "draft", widget: "boolean", default: true }
+      - { label: "正文", name: "body", widget: "markdown" }
+
+  - name: "portfolio"
+    label: "作品集"
+    folder: "src/content/portfolio"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "作品标题", name: "title", widget: "string" }
+      - { label: "作品简介", name: "description", widget: "text" }
+      - { label: "发布日期", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - label: "作品类型"
+        name: "type"
+        widget: "select"
+        options:
+          - "AI 绘图"
+          - "AI 视频"
+          - "分镜设计"
+          - "提示词作品"
+          - "海报与视觉实验"
+      - { label: "使用工具", name: "tools", widget: "list", required: false }
+      - { label: "标签", name: "tags", widget: "list", required: false }
+      - { label: "封面图", name: "cover", widget: "image", required: false }
+      - { label: "视频链接", name: "video", widget: "string", required: false }
+      - { label: "保存为草稿（开启时不会显示在博客前台）", name: "draft", widget: "boolean", default: true }
+      - { label: "正文", name: "body", widget: "markdown" }
+
+  - name: "reviews"
+    label: "项目复盘"
+    folder: "src/content/reviews"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "复盘标题", name: "title", widget: "string" }
+      - { label: "摘要", name: "description", widget: "text" }
+      - { label: "发布日期", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "关联项目", name: "project", widget: "string", required: false }
+      - label: "分类"
+        name: "category"
+        widget: "select"
+        options:
+          - "项目复盘"
+          - "AI 创作复盘"
+          - "视频复盘"
+          - "网站搭建复盘"
+      - { label: "标签", name: "tags", widget: "list", required: false }
+      - { label: "封面图", name: "cover", widget: "image", required: false }
+      - { label: "保存为草稿（开启时不会显示在博客前台）", name: "draft", widget: "boolean", default: true }
+      - { label: "正文", name: "body", widget: "markdown" }

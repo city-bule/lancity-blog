@@ -1,0 +1,25 @@
+---
+import { getCollection, render } from "astro:content";
+import PostLayout from "../../layouts/PostLayout.astro";
+import { byDateDesc, isPublished } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const reviews = (await getCollection("reviews")).filter(isPublished).sort(byDateDesc);
+
+  return reviews.map((entry, index) => ({
+    params: { slug: entry.id },
+    props: {
+      entry,
+      previous: reviews[index + 1],
+      next: reviews[index - 1],
+    },
+  }));
+}
+
+const { entry, previous, next } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<PostLayout entry={entry} label="项目复盘" backHref="/reviews/" backLabel="返回项目复盘" previous={previous} next={next}>
+  <Content />
+</PostLayout>

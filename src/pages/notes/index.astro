@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionTitle from "../../components/SectionTitle.astro";
+import NoteCard from "../../components/NoteCard.astro";
+import { byDateDesc, getEntryUrl, isPublished } from "../../lib/content";
+
+const notes = (await getCollection("notes")).filter(isPublished).sort(byDateDesc);
+const categories = Array.from(new Set(notes.map((note) => note.data.category)));
+---
+
+<BaseLayout title="学习笔记 | 蓝city" description="整理 AI 创作、编程学习、影像表达和网站搭建过程中的记录。">
+  <main class="mx-auto max-w-5xl px-5 py-12 sm:px-6 sm:py-16">
+    <SectionTitle
+      eyebrow="Notes"
+      title="学习笔记"
+      description="整理 AI 创作、编程学习、影像表达和网站搭建过程中的记录。"
+    />
+
+    <div class="mb-8 flex flex-wrap gap-2">
+      {
+        categories.map((category) => (
+          <span class="rounded-full border border-sky-100 bg-white px-3 py-1.5 text-sm text-slate-600">
+            {category}
+          </span>
+        ))
+      }
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      {
+        notes.map((note) => (
+          <NoteCard
+            title={note.data.title}
+            description={note.data.description}
+            date={note.data.date}
+            category={note.data.category}
+            tags={note.data.tags}
+            url={getEntryUrl("notes", note.id)}
+          />
+        ))
+      }
+    </div>
+  </main>
+</BaseLayout>

@@ -1,0 +1,25 @@
+---
+import { getCollection, render } from "astro:content";
+import PostLayout from "../../layouts/PostLayout.astro";
+import { byDateDesc, isPublished } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const notes = (await getCollection("notes")).filter(isPublished).sort(byDateDesc);
+
+  return notes.map((post, index) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      previous: notes[index + 1],
+      next: notes[index - 1],
+    },
+  }));
+}
+
+const { post, previous, next } = Astro.props;
+const { Content } = await render(post);
+---
+
+<PostLayout entry={post} label="学习笔记" backHref="/notes/" backLabel="返回学习笔记" previous={previous} next={next}>
+  <Content />
+</PostLayout>

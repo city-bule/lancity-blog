@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionTitle from "../../components/SectionTitle.astro";
+import NoteCard from "../../components/NoteCard.astro";
+import { byDateDesc, getEntryUrl, isPublished } from "../../lib/content";
+
+const reviews = (await getCollection("reviews")).filter(isPublished).sort(byDateDesc);
+const categories = Array.from(new Set(reviews.map((review) => review.data.category)));
+---
+
+<BaseLayout title="项目复盘 | 蓝city" description="记录项目目标、问题、修改过程和下一步改进方向。">
+  <main class="mx-auto max-w-5xl px-5 py-12 sm:px-6 sm:py-16">
+    <SectionTitle
+      eyebrow="Reviews"
+      title="项目复盘"
+      description="记录项目目标、问题、修改过程和下一步改进方向。"
+    />
+
+    <div class="mb-8 flex flex-wrap gap-2">
+      {
+        categories.map((category) => (
+          <span class="rounded-full border border-sky-100 bg-white px-3 py-1.5 text-sm text-slate-600">
+            {category}
+          </span>
+        ))
+      }
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      {
+        reviews.map((review) => (
+          <NoteCard
+            title={review.data.title}
+            description={review.data.description}
+            date={review.data.date}
+            category={review.data.category}
+            tags={review.data.tags}
+            url={getEntryUrl("reviews", review.id)}
+          />
+        ))
+      }
+    </div>
+  </main>
+</BaseLayout>

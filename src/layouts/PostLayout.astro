@@ -1,0 +1,67 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import TagList from "../components/TagList.astro";
+import { formatDate, getEntryUrl } from "../lib/content";
+
+const { entry, label, backHref, backLabel, previous, next } = Astro.props as any;
+const data = entry.data;
+const metaLabel = data.category || label;
+---
+
+<BaseLayout title={`${data.title} | 蓝city`} description={data.description}>
+  <main class="mx-auto max-w-3xl px-5 py-10 sm:px-6 sm:py-14">
+    <a href={backHref} class="text-sm font-medium text-sky-700 hover:text-sky-900">← {backLabel}</a>
+
+    <article class="mt-7">
+      <header class="border-b border-sky-100 pb-8">
+        <p class="mb-3 text-sm font-semibold text-sky-600">{label}</p>
+        <h1 class="text-3xl font-semibold leading-tight text-slate-950 sm:text-5xl">{data.title}</h1>
+        <p class="mt-5 text-lg leading-8 text-slate-600">{data.description}</p>
+        <div class="mt-5 flex flex-wrap items-center gap-3 text-sm text-slate-500">
+          <time datetime={data.date.toISOString()}>{formatDate(data.date)}</time>
+          {metaLabel && <span class="rounded-full bg-sky-100 px-3 py-1 text-sky-800">{metaLabel}</span>}
+        </div>
+        {data.project && <p class="mt-4 text-sm text-slate-500">关联项目：{data.project}</p>}
+        <div class="mt-5">
+          <TagList tags={data.tags} />
+        </div>
+      </header>
+
+      {
+        data.cover && (
+          <img
+            src={data.cover}
+            alt={`${data.title} 封面`}
+            class="mt-8 aspect-[16/9] w-full rounded-lg border border-sky-100 object-cover shadow-sm"
+            loading="eager"
+          />
+        )
+      }
+
+      <div class="article-content mt-9">
+        <slot />
+      </div>
+    </article>
+
+    {
+      (previous || next) && (
+        <nav class="mt-12 grid gap-3 border-t border-sky-100 pt-6 sm:grid-cols-2" aria-label="相邻文章">
+          {previous ? (
+            <a href={getEntryUrl(entry.collection, previous.id)} class="rounded-lg border border-sky-100 bg-white p-4 shadow-sm hover:border-sky-200">
+              <span class="text-xs font-medium text-slate-500">上一篇</span>
+              <span class="mt-2 block text-sm font-semibold leading-6 text-slate-900">{previous.data.title}</span>
+            </a>
+          ) : (
+            <span></span>
+          )}
+          {next && (
+            <a href={getEntryUrl(entry.collection, next.id)} class="rounded-lg border border-sky-100 bg-white p-4 shadow-sm hover:border-sky-200 sm:text-right">
+              <span class="text-xs font-medium text-slate-500">下一篇</span>
+              <span class="mt-2 block text-sm font-semibold leading-6 text-slate-900">{next.data.title}</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </main>
+</BaseLayout>
