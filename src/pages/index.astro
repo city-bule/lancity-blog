@@ -15,6 +15,15 @@ const latestNotes = notes.slice(0, 3);
 const featuredWorks = portfolio.slice(0, 3);
 const latestReviews = reviews.slice(0, 2);
 
+const sectionBackgrounds = {
+  learning: "/images/site/section-learning.png",
+  notes: "/images/site/section-notes.png",
+  portfolio: "/images/site/section-portfolio.png",
+  reviews: "/images/site/section-reviews.png",
+  about: "/images/site/section-about.png",
+  contact: "/images/site/section-contact.png",
+};
+
 const learningAreas = [
   {
     title: "AI 创作",
@@ -38,8 +47,11 @@ const learningAreas = [
   <Hero />
 
   <main>
-    <section class="bg-sky-50 px-5 py-14 sm:px-6">
-      <div class="mx-auto max-w-5xl">
+    <section class="relative isolate overflow-hidden px-5 py-16 sm:px-6">
+      <img src={sectionBackgrounds.learning} alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-white/84 backdrop-blur-[1px]"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-sky-50/94 via-white/72 to-teal-50/86"></div>
+      <div class="relative mx-auto max-w-5xl">
         <SectionTitle
           eyebrow="Now Learning"
           title="我正在学习"
@@ -59,8 +71,11 @@ const learningAreas = [
       </div>
     </section>
 
-    <section class="bg-white px-5 py-14 sm:px-6">
-      <div class="mx-auto max-w-5xl">
+    <section class="relative isolate overflow-hidden px-5 py-16 sm:px-6">
+      <img src={sectionBackgrounds.notes} alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-white/86 backdrop-blur-[1px]"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-white/92 via-sky-50/74 to-white/78"></div>
+      <div class="relative mx-auto max-w-5xl">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <SectionTitle
             eyebrow="Notes"
@@ -86,8 +101,11 @@ const learningAreas = [
       </div>
     </section>
 
-    <section class="bg-slate-50 px-5 py-14 sm:px-6">
-      <div class="mx-auto max-w-5xl">
+    <section class="relative isolate overflow-hidden px-5 py-16 sm:px-6">
+      <img src={sectionBackgrounds.portfolio} alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-white/82 backdrop-blur-[1px]"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-slate-50/92 via-white/70 to-violet-50/84"></div>
+      <div class="relative mx-auto max-w-5xl">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <SectionTitle
             eyebrow="Portfolio"
@@ -114,8 +132,11 @@ const learningAreas = [
       </div>
     </section>
 
-    <section class="bg-white px-5 py-14 sm:px-6">
-      <div class="mx-auto max-w-5xl">
+    <section class="relative isolate overflow-hidden px-5 py-16 sm:px-6">
+      <img src={sectionBackgrounds.reviews} alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-white/86 backdrop-blur-[1px]"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-white/92 via-sky-50/72 to-amber-50/72"></div>
+      <div class="relative mx-auto max-w-5xl">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <SectionTitle
             eyebrow="Reviews"
@@ -141,8 +162,11 @@ const learningAreas = [
       </div>
     </section>
 
-    <section class="bg-sky-50 px-5 py-14 sm:px-6">
-      <div class="mx-auto grid max-w-5xl gap-8 md:grid-cols-[1.1fr_0.9fr] md:items-center">
+    <section class="relative isolate overflow-hidden px-5 py-16 sm:px-6">
+      <img src={sectionBackgrounds.about} alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-white/84 backdrop-blur-[1px]"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-sky-50/92 via-white/74 to-emerald-50/78"></div>
+      <div class="relative mx-auto grid max-w-5xl gap-8 md:grid-cols-[1.1fr_0.9fr] md:items-center">
         <div>
           <SectionTitle
             eyebrow="About"
@@ -166,9 +190,12 @@ const learningAreas = [
       </div>
     </section>
 
-    <section class="bg-white px-5 py-14 sm:px-6">
-      <div class="mx-auto max-w-5xl">
-        <div class="rounded-lg border border-sky-100 bg-gradient-to-br from-white via-sky-50 to-violet-50 p-6 shadow-sm sm:p-8">
+    <section class="relative isolate overflow-hidden px-5 py-16 sm:px-6">
+      <img src={sectionBackgrounds.contact} alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-white/78 backdrop-blur-[1px]"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-white/86 via-sky-50/70 to-teal-50/78"></div>
+      <div class="relative mx-auto max-w-5xl">
+        <div class="rounded-lg border border-sky-100 bg-white/88 p-6 shadow-sm backdrop-blur sm:p-8">
           <p class="text-sm font-semibold text-sky-700">Contact</p>
           <h2 class="mt-3 text-2xl font-semibold text-slate-950">欢迎交流 AI 创作、视频制作、编程学习和博客搭建。</h2>
           <div class="mt-6 flex flex-wrap gap-3">

@@ -30,5 +30,24 @@ import SectionTitle from "../components/SectionTitle.astro";
         </p>
       </div>
     </div>
+
+    <div class="mt-12 flex justify-end border-t border-sky-100 pt-7">
+      <a
+        href="/about/details/"
+        class="group flex items-center gap-4 text-right"
+        aria-label="查看我的个人详细信息"
+      >
+        <span>
+          <span class="block text-sm font-semibold text-sky-700">More About Me</span>
+          <span class="mt-1 block text-base font-semibold text-slate-900">查看个人详细信息</span>
+        </span>
+        <span class="flex h-12 w-12 items-center justify-center rounded-full border border-sky-200 bg-white text-sky-700 shadow-sm transition group-hover:border-sky-400 group-hover:bg-sky-100 group-hover:text-sky-900">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h13"></path>
+            <path d="m14 6 6 6-6 6"></path>
+          </svg>
+        </span>
+      </a>
+    </div>
   </main>
 </BaseLayout>

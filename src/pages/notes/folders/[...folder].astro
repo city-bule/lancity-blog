@@ -1,0 +1,71 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import SectionTitle from "../../../components/SectionTitle.astro";
+import NoteCard from "../../../components/NoteCard.astro";
+import {
+  byDateDesc,
+  getEntryFolder,
+  getEntryFolderLabel,
+  getEntryUrl,
+  isPublished,
+} from "../../../lib/content";
+
+export async function getStaticPaths() {
+  const notes = (await getCollection("notes")).filter(isPublished).sort(byDateDesc);
+  const folderMap = new Map<string, typeof notes>();
+
+  for (const note of notes) {
+    const folder = getEntryFolder(note.id);
+    if (!folder) continue;
+
+    const entries = folderMap.get(folder) ?? [];
+    entries.push(note);
+    folderMap.set(folder, entries);
+  }
+
+  return Array.from(folderMap.entries()).map(([folder, entries]) => ({
+    params: { folder },
+    props: { folder, entries },
+  }));
+}
+
+const { folder, entries } = Astro.props;
+const folderLabel = getEntryFolderLabel(folder);
+---
+
+<BaseLayout
+  title={`${folderLabel} | 学习笔记 | 蓝city`}
+  description={`蓝city 的 ${folderLabel} 学习资料。`}
+>
+  <main class="mx-auto max-w-5xl px-5 py-12 sm:px-6 sm:py-16">
+    <a href="/notes/" class="mb-8 inline-flex text-sm font-medium text-sky-700 hover:text-sky-900">
+      ← 返回学习笔记
+    </a>
+
+    <SectionTitle
+      eyebrow="Folder"
+      title={folderLabel}
+      description={`这个文件夹下共有 ${entries.length} 篇学习资料。`}
+    />
+
+    <p class="mb-8 break-words rounded-lg border border-sky-100 bg-white px-4 py-3 text-sm text-slate-500 shadow-sm">
+      文件夹路径：{folder}
+    </p>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      {
+        entries.map((note) => (
+          <NoteCard
+            title={note.data.title}
+            description={note.data.description}
+            date={note.data.date}
+            category={note.data.category}
+            tags={note.data.tags}
+            url={getEntryUrl("notes", note.id)}
+          />
+        ))
+      }
+    </div>
+  </main>
+</BaseLayout>

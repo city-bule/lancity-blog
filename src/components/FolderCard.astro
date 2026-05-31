@@ -1,0 +1,30 @@
+---
+import { formatDate } from "../lib/content";
+
+interface Props {
+  title: string;
+  path: string;
+  count: number;
+  latestDate: Date;
+  url: string;
+}
+
+const { title, path, count, latestDate, url } = Astro.props;
+---
+
+<a
+  href={url}
+  class="block h-full rounded-lg border border-sky-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-md"
+>
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wide text-sky-600">Folder</p>
+      <h3 class="mt-2 text-lg font-semibold leading-7 text-slate-950">{title}</h3>
+    </div>
+    <span class="shrink-0 rounded-full bg-sky-50 px-2.5 py-1 text-xs font-medium text-sky-700">
+      {count} 篇
+    </span>
+  </div>
+  <p class="mt-3 break-words text-sm leading-6 text-slate-500">{path}</p>
+  <p class="mt-4 text-xs text-slate-400">最近更新：{formatDate(latestDate)}</p>
+</a>

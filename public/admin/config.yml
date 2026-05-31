@@ -17,6 +17,16 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     extension: "md"
     format: "frontmatter"
+    nested:
+      depth: 5
+      summary: "{{title}}"
+      subfolders: false
+    meta:
+      path:
+        label: "保存路径（文件夹/文件名）"
+        widget: "string"
+        index_file: "_index"
+        hint: "示例：ai-video/2026-05-29-first-video-note。填写新的文件夹名即可新建文件夹。"
     fields:
       - { label: "标题", name: "title", widget: "string" }
       - { label: "摘要", name: "description", widget: "text" }

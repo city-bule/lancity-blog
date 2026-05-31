@@ -22,3 +22,17 @@ export const isPublished = <T extends { data: { draft?: boolean } }>(entry: T) =
 
 export const getEntryUrl = (collection: BlogCollection, id: string) =>
   `/${collection}/${id}/`;
+
+export const getEntryFolder = (id: string) => {
+  const segments = id.split("/").filter(Boolean);
+  return segments.length > 1 ? segments.slice(0, -1).join("/") : "";
+};
+
+export const getEntryFolderLabel = (folder: string) => {
+  if (!folder) return "未归档";
+  const segments = folder.split("/").filter(Boolean);
+  return segments.at(-1) ?? folder;
+};
+
+export const getNoteFolderUrl = (folder: string) =>
+  folder ? `/notes/folders/${folder}/` : "/notes/";

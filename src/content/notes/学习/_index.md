@@ -1,8 +1,8 @@
 ---
-title: "网站搭建 001：我为什么开始搭建蓝city"
-description: "记录建立个人博客的原因，以及我希望它如何保存学习过程。"
+title: 网站搭建 001：我为什么开始搭建蓝city
+description: 记录建立个人博客的原因，以及我希望它如何保存学习过程。
 date: 2026-05-28
-category: "网站搭建"
+category: 网站搭建
 tags:
   - Astro
   - 网站搭建

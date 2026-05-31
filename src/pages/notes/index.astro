@@ -2,11 +2,40 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import SectionTitle from "../../components/SectionTitle.astro";
+import FolderCard from "../../components/FolderCard.astro";
 import NoteCard from "../../components/NoteCard.astro";
-import { byDateDesc, getEntryUrl, isPublished } from "../../lib/content";
+import {
+  byDateDesc,
+  getEntryFolder,
+  getEntryFolderLabel,
+  getEntryUrl,
+  getNoteFolderUrl,
+  isPublished,
+} from "../../lib/content";
 
 const notes = (await getCollection("notes")).filter(isPublished).sort(byDateDesc);
 const categories = Array.from(new Set(notes.map((note) => note.data.category)));
+
+const folderMap = new Map<string, typeof notes>();
+
+for (const note of notes) {
+  const folder = getEntryFolder(note.id);
+  if (!folder) continue;
+
+  const entries = folderMap.get(folder) ?? [];
+  entries.push(note);
+  folderMap.set(folder, entries);
+}
+
+const folders = Array.from(folderMap.entries())
+  .map(([path, entries]) => ({
+    path,
+    title: getEntryFolderLabel(path),
+    count: entries.length,
+    latestDate: entries[0].data.date,
+    url: getNoteFolderUrl(path),
+  }))
+  .sort((a, b) => b.latestDate.valueOf() - a.latestDate.valueOf());
 ---
 
 <BaseLayout title="学习笔记 | 蓝city" description="整理 AI 创作、编程学习、影像表达和网站搭建过程中的记录。">
@@ -17,6 +46,33 @@ const categories = Array.from(new Set(notes.map((note) => note.data.category)));
       description="整理 AI 创作、编程学习、影像表达和网站搭建过程中的记录。"
     />
 
+    {
+      folders.length > 0 && (
+        <section class="mb-12">
+          <div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p class="text-sm font-semibold text-sky-600">Folders</p>
+              <h2 class="mt-1 text-2xl font-semibold text-slate-900">资料文件夹</h2>
+            </div>
+            <p class="text-sm text-slate-500">共 {folders.length} 个文件夹</p>
+          </div>
+          <div class="grid gap-4 md:grid-cols-2">
+            {
+              folders.map((folder) => (
+                <FolderCard
+                  title={folder.title}
+                  path={folder.path}
+                  count={folder.count}
+                  latestDate={folder.latestDate}
+                  url={folder.url}
+                />
+              ))
+            }
+          </div>
+        </section>
+      )
+    }
+
     <div class="mb-8 flex flex-wrap gap-2">
       {
         categories.map((category) => (
@@ -25,6 +81,10 @@ const categories = Array.from(new Set(notes.map((note) => note.data.category)));
           </span>
         ))
       }
+    </div>
+
+    <div class="mb-6">
+      <h2 class="text-2xl font-semibold text-slate-900">全部学习资料</h2>
     </div>
 
     <div class="grid gap-4 md:grid-cols-2">
