@@ -68,7 +68,18 @@ collections:
       - { label: "使用工具", name: "tools", widget: "list", required: false }
       - { label: "标签", name: "tags", widget: "list", required: false }
       - { label: "封面图", name: "cover", widget: "image", required: false }
-      - { label: "视频链接", name: "video", widget: "string", required: false }
+      - label: "视频文件或链接"
+        name: "video"
+        widget: "file"
+        required: false
+        media_folder: "/public/videos/uploads"
+        public_folder: "/videos/uploads"
+        allow_multiple: false
+        choose_url: true
+        media_library:
+          config:
+            max_file_size: 10485760
+        hint: "仅建议上传 10 MB 以内的短视频。较大的视频请先上传到 B 站、YouTube 或对象存储，再点击从 URL 插入并粘贴公开链接。"
       - { label: "保存为草稿（开启时不会显示在博客前台）", name: "draft", widget: "boolean", default: true }
       - { label: "正文", name: "body", widget: "markdown" }
 

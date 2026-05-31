@@ -5,6 +5,76 @@ import { formatDate, getEntryUrl } from "../lib/content";
 
 const { entry, previous, next } = Astro.props as any;
 const data = entry.data;
+
+type VideoEmbed =
+  | { kind: "file"; src: string; mimeType?: string }
+  | { kind: "iframe"; src: string };
+
+const getDirectVideoMimeType = (videoUrl: string) => {
+  const extension = videoUrl.match(/\.([a-z0-9]+)(?:[?#].*)?$/i)?.[1]?.toLowerCase();
+  const mimeTypes: Record<string, string> = {
+    mp4: "video/mp4",
+    webm: "video/webm",
+    ogg: "video/ogg",
+    mov: "video/quicktime",
+    m4v: "video/x-m4v",
+  };
+
+  return extension ? mimeTypes[extension] : undefined;
+};
+
+const getVideoEmbed = (videoUrl?: string): VideoEmbed | undefined => {
+  if (!videoUrl) return undefined;
+
+  const mimeType = getDirectVideoMimeType(videoUrl);
+  if (mimeType) return { kind: "file", src: videoUrl, mimeType };
+
+  try {
+    const url = new URL(videoUrl);
+    const hostname = url.hostname.replace(/^www\./, "");
+
+    if (hostname === "youtu.be") {
+      const videoId = url.pathname.split("/").filter(Boolean)[0];
+      if (videoId) return { kind: "iframe", src: `https://www.youtube-nocookie.com/embed/${videoId}` };
+    }
+
+    if (hostname === "youtube.com" || hostname === "m.youtube.com") {
+      const videoId =
+        url.searchParams.get("v") ??
+        url.pathname.match(/^\/(?:embed|shorts)\/([^/?#]+)/)?.[1];
+      if (videoId) return { kind: "iframe", src: `https://www.youtube-nocookie.com/embed/${videoId}` };
+    }
+
+    if (hostname === "bilibili.com" || hostname === "m.bilibili.com") {
+      const videoId = url.pathname.match(/\/video\/(BV[a-zA-Z0-9]+)/)?.[1];
+      if (videoId) {
+        return {
+          kind: "iframe",
+          src: `https://player.bilibili.com/player.html?bvid=${videoId}&page=1&high_quality=1&danmaku=0`,
+        };
+      }
+    }
+
+    if (hostname === "player.bilibili.com") {
+      return { kind: "iframe", src: videoUrl };
+    }
+
+    if (hostname === "vimeo.com") {
+      const videoId = url.pathname.split("/").filter(Boolean)[0];
+      if (videoId) return { kind: "iframe", src: `https://player.vimeo.com/video/${videoId}` };
+    }
+
+    if (hostname === "player.vimeo.com") {
+      return { kind: "iframe", src: videoUrl };
+    }
+  } catch {
+    return undefined;
+  }
+
+  return undefined;
+};
+
+const videoEmbed = getVideoEmbed(data.video);
 ---
 
 <BaseLayout title={`${data.title} | 蓝city`} description={data.description}>
@@ -43,9 +113,47 @@ const data = entry.data;
 
       {
         data.video && (
-          <a href={data.video} class="mt-6 inline-flex rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-600">
-            打开视频链接
-          </a>
+          <section class="mt-8">
+            {videoEmbed?.kind === "file" && (
+              <video
+                controls
+                preload="metadata"
+                poster={data.cover}
+                class="aspect-video w-full rounded-lg border border-sky-100 bg-slate-950 shadow-sm"
+              >
+                <source src={videoEmbed.src} type={videoEmbed.mimeType} />
+                你的浏览器暂不支持视频播放，请使用下方链接打开视频。
+              </video>
+            )}
+
+            {videoEmbed?.kind === "iframe" && (
+              <div class="aspect-video overflow-hidden rounded-lg border border-sky-100 bg-slate-950 shadow-sm">
+                <iframe
+                  src={videoEmbed.src}
+                  title={`${data.title} 视频播放器`}
+                  class="h-full w-full"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                />
+              </div>
+            )}
+
+            {!videoEmbed && (
+              <p class="rounded-lg border border-sky-100 bg-white p-4 text-sm leading-7 text-slate-600 shadow-sm">
+                当前视频地址暂不支持页面内嵌播放，请使用下方链接打开视频。
+              </p>
+            )}
+
+            <a
+              href={data.video}
+              class="mt-4 inline-flex rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-600"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              在新窗口打开视频
+            </a>
+          </section>
         )
       }
 
